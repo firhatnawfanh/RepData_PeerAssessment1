@@ -8,14 +8,6 @@
 download.file("https://d396qusza40orc.cloudfront.net/repdata/data/activity.zip",destfile="activity.zip")
 # unzip and read the downloaded file into R
 raw.data<-read.csv(unz("activity.zip","activity.csv"),sep=",",na.strings="NA",stringsAsFactors=FALSE)
-```
-
-## What is mean total number of steps taken per day?  
-1. Calculate the total number of steps taken per day    
-2. If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day     
-3. Calculate and report the mean and median of the total number of steps taken per day  
-
-```r
 # strptime date from date column
 date<-strptime(raw.data$date,format="%Y-%m-%d")
 # make the interval value more uniform in number format
@@ -24,31 +16,52 @@ interval<-formatC(raw.data$interval,width=4,flag="0")
 date.time<-strptime(paste(raw.data$date,interval),format="%Y-%m-%d %H%M")
 ```
 
-## What is the average daily activity pattern?  
-1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)  
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?  
+## What is mean total number of steps taken per day?  
+1. Calculate the total number of steps taken per day    
+2. If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day     
+3. Calculate and report the mean and median of the total number of steps taken per day  
 
 ```r
 # calculate for total number of steps per day
 tot.steps.date<-as.numeric(tapply(raw.data$steps,raw.data$date,sum,na.rm=TRUE))
 # plot histogram of total number of steps oer day
-hist(tot.steps.date,main="HIstogram of Total Number of Steps per Day",xlab="Total Steps in a Day",ylab="Frequency")
+hist(tot.steps.date,main="Histogram of Total Number of Steps per Day",xlab="Total Steps in a Day",ylab="Frequency")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
 
 ```r
 # calculate mean of total numbers of steps taken per days
 mean.steps.date<-mean(tot.steps.date,na.rm=TRUE)
+mean.steps.date
+```
+
+```
+## [1] 9354.23
+```
+
+```r
 # calculate median of total numbers of steps taken per days
 median.steps.date<-median(tot.steps.date,na.rm=TRUE)
+median.steps.date
+```
+
+```
+## [1] 10395
+```
+
+## What is the average daily activity pattern?  
+1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)  
+2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?  
+
+```r
 # averaging number of the 5 minute interval (x axis), and steps taken, averaged across all day(y axis)
 interval.steps.date<-as.numeric(lapply(split(raw.data$steps,raw.data$interval),mean,na.rm=TRUE))
 # construct a plot of interval and average steps taken across all days
 plot(unique((interval)),interval.steps.date,type="l",main="Average Daily Number of Steps Taken in 5 Minutes Interval",xlab="Interval",ylab="Average of Number of Steps Taken")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-2.png)
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 ```r
 # find 5 minute interval across all the days in the data sets  that contain the max number of steps
@@ -423,9 +436,9 @@ weekend.interval.steps.date<-as.numeric(lapply(split(weekend.data$steps,weekend.
 # construct a layout for the plot1
 par(mfrow=c(2,1))
 # construct histogram of average number of steps taken each day across all weekdays of filled weekdays dataset
-hist(weekdays.interval.steps.date,main="Average Daily Number of Steps Taken in 5 Minutes Interval-Weekdays",xlab="Interval",ylab="Steps")
+plot(weekdays.interval.steps.date,type="l",main="Average Daily Number of Steps Taken in 5 Minutes Interval-Weekdays",xlab="Interval",ylab="Steps")
 # construct histogram of average number of steps taken each day across all weekend of filled weekend dataset
-hist(weekend.interval.steps.date,main="Average Daily Number of Steps Taken in 5 Minutes Interval--Weekend",xlab="Interval",ylab="Steps")
+plot(weekend.interval.steps.date,type="l",main="Average Daily Number of Steps Taken in 5 Minutes Interval--Weekend",xlab="Interval",ylab="Steps")
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
